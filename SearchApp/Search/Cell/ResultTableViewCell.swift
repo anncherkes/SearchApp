@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import SDWebImage
 
 public class ResultTableViewCell: UITableViewCell {
-
-    private var gifImageView: UIImageView?
+    
+    private var gifImageView: SDAnimatedImageView?
     private var title: UILabel?
     
     override public func awakeFromNib() {
@@ -21,24 +22,20 @@ public class ResultTableViewCell: UITableViewCell {
         
         addContent()
         
-        if let urlString = url {
-            setGif(with: urlString)
+        guard let urlString = url else { return }
+        guard let url = URL(string: urlString) else {
+            return
         }
         
-        if let textTile = title {
-            guard let titleLabel = self.title else { return }
-            titleLabel.text = textTile
+        guard let titleText = title else {
+            return
         }
-    }
-    
-    private func setGif(with url: String) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let imageURL = UIImage.gifImageWithURL(gifUrl: url)
-            DispatchQueue.main.async {
-                guard let gifImageView = self.gifImageView else { return }
-                gifImageView.image = imageURL
-            }
-        }
+
+        guard let gifImageView = self.gifImageView else { return }
+        gifImageView.sd_setImage(with: url)
+        
+        guard let titleLabel = self.title else { return }
+        titleLabel.text = titleText
     }
 
     private func addContent() {
@@ -48,7 +45,7 @@ public class ResultTableViewCell: UITableViewCell {
         
         gifImageView = nil
         title = nil
-    
+        
         title = UILabel(frame: CGRect.zero)
         guard let title = title else { return }
         contentView.addSubview(title)
@@ -58,8 +55,8 @@ public class ResultTableViewCell: UITableViewCell {
         title.leftAnchor.constraint(equalTo: margin.leftAnchor, constant: -16).isActive = true
         title.rightAnchor.constraint(equalTo: margin.rightAnchor, constant: 16).isActive = true
         title.heightAnchor.constraint(equalToConstant: 30).isActive = true
-    
-        gifImageView = UIImageView(frame: CGRect.zero)
+        
+        gifImageView = SDAnimatedImageView(frame: CGRect.zero) 
         guard let gifImageView = gifImageView else { return }
         
         contentView.addSubview(gifImageView)

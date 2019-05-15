@@ -6,6 +6,8 @@ target 'SearchApp' do
   use_frameworks!
   pod 'SwiftyJSON', '~> 4.0'
   pod 'RealmSwift'
+  pod 'FLAnimatedImage', '~> 1.0'
+  pod 'SDWebImage', '~> 5.0'
   # Pods for SearchApp
 
   target 'SearchAppTests' do
